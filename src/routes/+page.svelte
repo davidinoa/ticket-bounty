@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<h2 class="text-2xl font-bold">Home</h2>
+
+<div class="mt-4">
+	<a href="/tickets" class="text-blue-400 underline hover:text-blue-300">View Tickets</a>
+</div>
