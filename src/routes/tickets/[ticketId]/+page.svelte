@@ -5,24 +5,13 @@
 	export let data: PageData;
 	$: ticket = getTicketById(data.id);
 
-	// Format date
-	const formatDate = (date: Date) => {
-		return new Intl.DateTimeFormat('en-US', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
-		}).format(date);
-	};
-
 	// Status badge colors
 	const getStatusColor = (status: string) => {
 		switch (status) {
-			case 'open':
+			case 'DONE':
 				return 'bg-green-500/20 text-green-400';
-			case 'in_progress':
+			case 'IN_PROGRESS':
 				return 'bg-blue-500/20 text-blue-400';
-			case 'completed':
-				return 'bg-gray-500/20 text-gray-400';
 			default:
 				return 'bg-gray-500/20 text-gray-400';
 		}
@@ -43,7 +32,7 @@
 		<div class="mb-6 flex items-center justify-between">
 			<h1 class="text-3xl font-bold">{ticket.title}</h1>
 			<span class="rounded-full px-3 py-1 text-sm {getStatusColor(ticket.status)}">
-				{ticket.status.replace('_', ' ')}
+				{ticket.status}
 			</span>
 		</div>
 
@@ -53,21 +42,12 @@
 					<p class="text-sm text-gray-400">Ticket ID</p>
 					<p class="text-lg">{ticket.id}</p>
 				</div>
-				<div class="text-right">
-					<p class="text-sm text-gray-400">Created</p>
-					<p class="text-lg">{formatDate(ticket.createdAt)}</p>
-				</div>
 			</div>
 
 			<div class="space-y-6">
 				<div>
-					<h2 class="mb-2 text-xl font-semibold">Description</h2>
-					<p class="text-gray-300">{ticket.description}</p>
-				</div>
-
-				<div>
-					<h2 class="mb-2 text-xl font-semibold">Bounty Amount</h2>
-					<p class="text-2xl font-bold text-green-400">${ticket.bountyAmount}</p>
+					<h2 class="mb-2 text-xl font-semibold">Content</h2>
+					<p class="text-gray-300">{ticket.content}</p>
 				</div>
 			</div>
 		</div>
