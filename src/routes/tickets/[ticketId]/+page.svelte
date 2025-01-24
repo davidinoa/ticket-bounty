@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getTicketById } from '$lib/stores/tickets';
+	import { paths } from '../../../path';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -20,7 +21,7 @@
 
 <div class="mx-auto max-w-4xl p-6">
 	<div class="mb-6">
-		<a href="/" class="inline-flex items-center text-blue-400 hover:text-blue-300">
+		<a href={paths.home()} class="inline-flex items-center text-blue-400 hover:text-blue-300">
 			<svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 			</svg>

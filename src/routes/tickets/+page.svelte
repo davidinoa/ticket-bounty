@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { tickets } from '$lib/stores/tickets';
+	import { paths } from '../../path';
 </script>
 
 <div class="mt-4 p-4">
-	<a href="/" class="text-blue-400 underline hover:text-blue-300">Home</a>
+	<a href={paths.home()} class="text-blue-400 underline hover:text-blue-300">Home</a>
 </div>
 
 <div class="mx-auto max-w-4xl p-6">
@@ -12,7 +13,7 @@
 	<div class="space-y-4">
 		{#each $tickets as ticket}
 			<a
-				href="/tickets/{ticket.id}"
+				href={paths.tickets.detail(ticket.id)}
 				class="block rounded-lg bg-gray-800 p-6 transition-transform hover:scale-[1.02]"
 			>
 				<div class="flex items-center justify-between">
