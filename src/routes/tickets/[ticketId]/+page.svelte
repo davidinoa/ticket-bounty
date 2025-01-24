@@ -6,7 +6,6 @@
 	export let data: PageData;
 	$: ticket = getTicketById(data.id);
 
-	// Status badge colors
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case 'DONE':
@@ -19,13 +18,21 @@
 	};
 </script>
 
-<div class="mx-auto max-w-4xl p-6">
-	<div class="mb-6">
-		<a href={paths.home()} class="inline-flex items-center text-blue-400 hover:text-blue-300">
+<svelte:head>
+	<title>{ticket ? `${ticket.title} - Ticket Bounty` : 'Ticket Not Found - Ticket Bounty'}</title>
+	<meta name="description" content={ticket?.content || 'Ticket not found'} />
+</svelte:head>
+
+<div class="mx-auto w-full min-w-fit max-w-xl">
+	<div class="mb-8">
+		<a
+			href={paths.tickets.list()}
+			class="inline-flex items-center text-gray-400 transition-colors hover:text-gray-300"
+		>
 			<svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 			</svg>
-			Back to Home
+			Back to Tickets
 		</a>
 	</div>
 
@@ -37,23 +44,21 @@
 			</span>
 		</div>
 
-		<div class="rounded-lg bg-gray-800 p-6">
-			<div class="mb-6 flex items-center justify-between border-b border-gray-700 pb-4">
+		<div class="rounded-lg bg-gray-800/50 p-6">
+			<div class="mb-6 flex items-center justify-between border-b border-gray-700/50 pb-4">
 				<div>
 					<p class="text-sm text-gray-400">Ticket ID</p>
 					<p class="text-lg">{ticket.id}</p>
 				</div>
 			</div>
 
-			<div class="space-y-6">
-				<div>
-					<h2 class="mb-2 text-xl font-semibold">Content</h2>
-					<p class="text-gray-300">{ticket.content}</p>
-				</div>
+			<div>
+				<h2 class="mb-3 text-xl font-semibold">Content</h2>
+				<p class="text-gray-300">{ticket.content}</p>
 			</div>
 		</div>
 	{:else}
-		<div class="rounded-lg bg-gray-800 p-6 text-center">
+		<div class="rounded-lg bg-gray-800/50 p-6 text-center">
 			<p class="text-xl text-gray-400">Ticket not found</p>
 		</div>
 	{/if}
