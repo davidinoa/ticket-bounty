@@ -5,7 +5,7 @@ export type Ticket = {
 	id: string;
 	title: string;
 	content: string;
-	status: 'DONE' | 'IN_PROGRESS';
+	status: 'OPEN' | 'IN_PROGRESS' | 'DONE';
 };
 
 export const tickets = writable<Ticket[]>(initialTickets);
