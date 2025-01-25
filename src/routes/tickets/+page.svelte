@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { tickets } from '$lib/stores/tickets';
-	import { onMount } from 'svelte';
 	import { paths } from '../../path';
 	import { fade, fly } from 'svelte/transition';
+	import * as Card from '$lib/components/ui/card';
 
 	const TICKET_ICONS = {
 		DONE: '✅',
@@ -23,14 +23,17 @@
 		}
 	};
 
-	let mountedItems = new Set<string>();
+	let mountedItems = $state(new Set<string>());
 
-	onMount(() => {
+	$effect(() => {
+		let timeout: NodeJS.Timeout;
 		$tickets.forEach((ticket, index) => {
-			setTimeout(() => {
-				mountedItems = mountedItems.add(ticket.id);
+			timeout = setTimeout(() => {
+				mountedItems = new Set([...mountedItems, ticket.id]);
 			}, index * 300);
 		});
+
+		return () => clearTimeout(timeout);
 	});
 </script>
 
@@ -47,17 +50,24 @@
 		{#each $tickets as ticket}
 			{#if mountedItems.has(ticket.id)}
 				<div in:fly={{ y: 20, duration: 700 }} out:fade>
-					<a
-						href={paths.tickets.detail(ticket.id)}
-						class="block rounded-lg bg-gray-800/50 p-6 transition-transform hover:scale-[1.01] hover:bg-gray-800/70"
-					>
-						<div class="flex items-center justify-between">
-							<h3 class="text-xl font-semibold">{ticket.title}</h3>
-							<span class="rounded-full {getStatusColor(ticket.status)} px-3 py-1 text-sm">
-								{TICKET_ICONS[ticket.status]}
-							</span>
-						</div>
-						<p class="mt-2 line-clamp-1 text-gray-400">{ticket.content}</p>
+					<a href={paths.tickets.detail(ticket.id)} class="block">
+						<Card.Root
+							class="bg-gray-800/50 transition-transform hover:scale-[1.01] hover:bg-gray-800/70"
+						>
+							<Card.Header>
+								<Card.Title class="flex items-center justify-between text-xl">
+									<div class="flex items-center gap-2">
+										<span>{ticket.title}</span>
+									</div>
+									<span class="rounded-full px-3 py-1 text-sm {getStatusColor(ticket.status)}">
+										{TICKET_ICONS[ticket.status]}
+									</span>
+								</Card.Title>
+							</Card.Header>
+							<Card.Content>
+								<p class="line-clamp-1 text-gray-400">{ticket.content}</p>
+							</Card.Content>
+						</Card.Root>
 					</a>
 				</div>
 			{/if}

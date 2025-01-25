@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { getTicketById } from '$lib/stores/tickets';
 	import { paths } from '../../../path';
+	import * as Card from '$lib/components/ui/card';
+	import { Button } from '$lib/components/ui/button';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ticket = getTicketById(data.id);
+	const ticket = getTicketById(data.id);
 
 	const TICKET_ICONS = {
 		DONE: '✅',
@@ -33,15 +35,12 @@
 
 <div class="mx-auto w-full min-w-fit max-w-xl">
 	<div class="mb-8">
-		<a
-			href={paths.tickets.list()}
-			class="inline-flex items-center text-gray-400 transition-colors hover:text-gray-300"
-		>
+		<Button href={paths.tickets.list()} variant="ghost" class="text-gray-400 hover:text-gray-300">
 			<svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 			</svg>
 			Back to Tickets
-		</a>
+		</Button>
 	</div>
 
 	{#if ticket}
@@ -53,19 +52,19 @@
 			</span>
 		</div>
 
-		<div class="rounded-lg bg-gray-800/50 p-6">
-			<div class="mb-6 flex items-center justify-between border-b border-gray-700/50 pb-4">
-				<div>
-					<p class="text-sm text-gray-400">Ticket ID</p>
-					<p class="text-lg">{ticket.id}</p>
+		<Card.Root class="bg-gray-800/50">
+			<Card.Header class="border-b border-gray-700/50">
+				<div class="flex items-center justify-between pb-4">
+					<div>
+						<Card.Description class="text-sm text-gray-400">Ticket ID</Card.Description>
+						<Card.Title class="text-lg font-normal">{ticket.id}</Card.Title>
+					</div>
 				</div>
-			</div>
-
-			<div>
-				<h2 class="mb-3 text-xl font-semibold">Content</h2>
-				<p class="text-gray-300">{ticket.content}</p>
-			</div>
-		</div>
+			</Card.Header>
+			<Card.Content>
+				<p class="text-pretty text-gray-300">{ticket.content}</p>
+			</Card.Content>
+		</Card.Root>
 	{:else}
 		<div class="rounded-lg bg-gray-800/50 p-6 text-center">
 			<p class="text-xl text-gray-400">Ticket not found</p>
