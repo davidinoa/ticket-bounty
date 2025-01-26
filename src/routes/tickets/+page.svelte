@@ -3,6 +3,7 @@
 	import { paths } from '../../path';
 	import { fade, fly } from 'svelte/transition';
 	import * as Card from '$lib/components/ui/card';
+	import { Separator } from '$lib/components/ui/separator';
 
 	const TICKET_ICONS = {
 		DONE: '✅',
@@ -37,14 +38,16 @@
 	});
 </script>
 
-<div class="mx-auto max-w-lg">
-	<div class="mb-8 grid gap-4">
+<div class="mx-auto grid max-w-lg gap-8">
+	<div class="grid gap-4">
 		<h2 class="text-3xl font-bold">Tickets</h2>
 		<p class="text-pretty text-gray-300">
 			Here are the tickets that have been submitted. You can view the details of each ticket and
 			submit a solution if you have one.
 		</p>
 	</div>
+
+	<Separator />
 
 	<div class="space-y-4">
 		{#each $tickets as ticket}
