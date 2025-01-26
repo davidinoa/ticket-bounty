@@ -49,6 +49,7 @@
 	},
 	"dependencies": {
 		"@neondatabase/serverless": "^0.10.4",
-		"drizzle-orm": "^0.38.4"
+		"drizzle-orm": "^0.38.4",
+		"lucide-svelte": "^0.474.0"
 	}
 }

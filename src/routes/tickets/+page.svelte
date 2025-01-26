@@ -4,11 +4,12 @@
 	import { fade, fly } from 'svelte/transition';
 	import * as Card from '$lib/components/ui/card';
 	import { Separator } from '$lib/components/ui/separator';
+	import { LucideCheckCircle, LucideCircleDashed, LucideFileText } from 'lucide-svelte';
 
 	const TICKET_ICONS = {
-		DONE: '✅',
-		IN_PROGRESS: '🔄',
-		OPEN: '📝'
+		DONE: LucideCheckCircle,
+		IN_PROGRESS: LucideCircleDashed,
+		OPEN: LucideFileText
 	} as const;
 
 	const getStatusColor = (status: string) => {
@@ -63,7 +64,7 @@
 										<span>{ticket.title}</span>
 									</div>
 									<span class="rounded-full px-3 py-1 text-sm {getStatusColor(ticket.status)}">
-										{TICKET_ICONS[ticket.status]}
+										<svelte:component this={TICKET_ICONS[ticket.status]} class="size-4" />
 									</span>
 								</Card.Title>
 							</Card.Header>
