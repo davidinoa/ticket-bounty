@@ -4,28 +4,11 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import type { PageData } from './$types';
+	import NotFound from '$lib/components/not-found.svelte';
+	import { TICKET_ICONS, getStatusColor } from '$lib/utils/ticketUtils';
 
 	export let data: PageData;
 	const ticket = getTicketById(data.id);
-
-	const TICKET_ICONS = {
-		DONE: '✅',
-		IN_PROGRESS: '🔄',
-		OPEN: '📝'
-	} as const;
-
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case 'DONE':
-				return 'bg-green-500/20 text-green-400';
-			case 'IN_PROGRESS':
-				return 'bg-blue-500/20 text-blue-400';
-			case 'OPEN':
-				return 'bg-yellow-500/20 text-yellow-400';
-			default:
-				return 'bg-gray-500/20 text-gray-400';
-		}
-	};
 </script>
 
 <svelte:head>
@@ -44,10 +27,15 @@
 	</div>
 
 	{#if ticket}
+		{@const Icon = TICKET_ICONS[ticket.status]}
 		<div class="mb-6 flex items-center justify-between">
 			<h1 class="text-3xl font-bold">{ticket.title}</h1>
-			<span class="rounded-full px-3 py-1 text-sm {getStatusColor(ticket.status)}">
-				{TICKET_ICONS[ticket.status]}
+			<span
+				class="flex items-center gap-2 rounded-full px-3 py-1 text-sm {getStatusColor(
+					ticket.status
+				)}"
+			>
+				<Icon class="size-4" />
 				{ticket.status}
 			</span>
 		</div>
@@ -66,8 +54,18 @@
 			</Card.Content>
 		</Card.Root>
 	{:else}
-		<div class="rounded-lg bg-gray-800/50 p-6 text-center">
-			<p class="text-xl text-gray-400">Ticket not found</p>
+		<div class="flex flex-col">
+			<NotFound
+				message="Ticket not found"
+				buttonProps={{
+					variant: 'link',
+					onclick: () => {
+						window.location.href = paths.tickets.list();
+					},
+					children: 'Back to Tickets'
+				}}
+				{Button}
+			/>
 		</div>
 	{/if}
 </div>

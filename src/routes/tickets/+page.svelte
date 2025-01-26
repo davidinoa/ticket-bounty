@@ -3,27 +3,8 @@
 	import * as Card from '$lib/components/ui/card';
 	import { tickets } from '$lib/stores/tickets';
 	import { fade, fly } from 'svelte/transition';
-	import { LucideCheckCircle, LucideCircleDashed, LucideFileText } from 'lucide-svelte';
+	import { TICKET_ICONS, getStatusColor } from '$lib/utils/ticketUtils';
 	import { paths } from '../../path';
-
-	const TICKET_ICONS = {
-		DONE: LucideCheckCircle,
-		IN_PROGRESS: LucideCircleDashed,
-		OPEN: LucideFileText
-	} as const;
-
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case 'DONE':
-				return 'bg-green-500/20 text-green-400';
-			case 'IN_PROGRESS':
-				return 'bg-blue-500/20 text-blue-400';
-			case 'OPEN':
-				return 'bg-yellow-500/20 text-yellow-400';
-			default:
-				return 'bg-gray-500/20 text-gray-400';
-		}
-	};
 
 	let mountedItems = $state(new Set<string>());
 
