@@ -5,7 +5,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import type { PageData } from './$types';
 	import NotFound from '$lib/components/not-found.svelte';
-	import { TICKET_ICONS, getStatusColor } from '$lib/utils/ticketUtils';
+	import { getStatusColor } from '$lib/utils/ticketUtils';
+	import { TICKET_ICONS } from '@features/tickets/constants';
 
 	export let data: PageData;
 	const ticket = getTicketById(data.id);
