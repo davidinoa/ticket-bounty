@@ -12,7 +12,7 @@
 
 <div in:fly={{ y: 20, duration: 700 }} out:fade>
 	<a href={paths.tickets.detail(ticket.id)} class="block">
-		<Card.Root class="bg-gray-800/50 transition-transform hover:scale-[1.01] hover:bg-gray-800/70">
+		<Card.Root class="bg-card transition-transform hover:scale-[1.01] hover:bg-muted/70">
 			<Card.Header>
 				<Card.Title class="flex items-center justify-between text-xl">
 					<div class="flex items-center gap-2">
@@ -24,7 +24,7 @@
 				</Card.Title>
 			</Card.Header>
 			<Card.Content>
-				<p class="line-clamp-1 text-gray-400">{ticket.content}</p>
+				<p class="line-clamp-1 text-muted-foreground">{ticket.content}</p>
 			</Card.Content>
 		</Card.Root>
 	</a>

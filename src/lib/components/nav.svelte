@@ -2,6 +2,7 @@
 	import { paths } from '../../path';
 	import { Button } from '$lib/components/ui/button';
 	import { LucideKanban } from 'lucide-svelte';
+	import ThemeSelector from './theme-selector.svelte';
 </script>
 
 <nav
@@ -11,5 +12,8 @@
 		<LucideKanban />
 		<h1 class="text-lg font-bold">TicketBounty</h1>
 	</Button>
-	<Button href={paths.tickets.list()} variant="link">Tickets</Button>
+	<div class="flex items-center gap-4">
+		<Button href={paths.tickets.list()} variant="link">Tickets</Button>
+		<ThemeSelector />
+	</div>
 </nav>
