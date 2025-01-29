@@ -34,7 +34,7 @@ importers:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.1)
       bits-ui:
-        specifier: 0.22.0
+        specifier: ^0.22.0
         version: 0.22.0(svelte@5.19.0)
       clsx:
         specifier: ^2.1.1

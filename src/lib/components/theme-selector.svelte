@@ -1,6 +1,8 @@
 <script lang="ts">
   import { theme } from '$lib/stores/theme';
-  import { onMount } from 'svelte';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
+  import { LucideSun, LucideMoon, LucideMonitor } from 'lucide-svelte';
 
   type Theme = 'dark' | 'light' | 'system';
   let isHydrated = $state(false);
@@ -8,15 +10,18 @@
   const themes = [
     {
       id: 'light',
-      name: 'Light'
+      name: 'Light',
+      icon: LucideSun
     },
     {
       id: 'dark',
-      name: 'Dark'
+      name: 'Dark',
+      icon: LucideMoon
     },
     {
       id: 'system',
-      name: 'System'
+      name: 'System',
+      icon: LucideMonitor
     }
   ] as const;
 
@@ -25,23 +30,37 @@
     isHydrated = true;
   });
 
-  function handleThemeChange(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    const newTheme = select.value as Theme;
-    theme.setTheme(newTheme);
+  function handleThemeChange(value: Theme) {
+    theme.setTheme(value);
   }
 </script>
 
 <div class="relative">
-  <select
-    value={$theme}
-    onchange={handleThemeChange}
-    class="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 {!isHydrated
-      ? 'invisible'
-      : ''}"
-  >
-    {#each themes as themeOption}
-      <option value={themeOption.id}>{themeOption.name}</option>
-    {/each}
-  </select>
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger>
+      <Button variant="outline" size="icon" class={!isHydrated ? 'invisible' : ''}>
+        {#if $theme === 'light'}
+          <LucideSun class="h-4 w-4" />
+        {:else if $theme === 'dark'}
+          <LucideMoon class="h-4 w-4" />
+        {:else}
+          <LucideMonitor class="h-4 w-4" />
+        {/if}
+        <span class="sr-only">Toggle theme</span>
+      </Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content align="end">
+      <DropdownMenu.RadioGroup
+        value={$theme}
+        onValueChange={(value) => handleThemeChange(value as Theme)}
+      >
+        {#each themes as themeOption}
+          <DropdownMenu.RadioItem value={themeOption.id}>
+            <themeOption.icon class="mr-2 h-4 w-4" />
+            {themeOption.name}
+          </DropdownMenu.RadioItem>
+        {/each}
+      </DropdownMenu.RadioGroup>
+    </DropdownMenu.Content>
+  </DropdownMenu.Root>
 </div>
