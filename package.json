@@ -50,6 +50,8 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "@tanstack/svelte-query": "^5.65.0",
+    "@tanstack/svelte-query-devtools": "^5.65.0",
     "drizzle-orm": "^0.38.4"
   }
 }
