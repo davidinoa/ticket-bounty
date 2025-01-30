@@ -1,21 +1,19 @@
-import { initialTickets } from '../data';
 import type { Ticket } from './types';
 
-export const api = () => ({
+export const api = (fetch = window.fetch) => ({
   getTickets: async (limit: number) => {
-    await wait(500);
-    return initialTickets.slice(0, limit);
+    const response = await fetch(`/api/tickets?limit=${limit}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch tickets');
+    }
+    return response.json();
   },
+
   getTicketById: async (id: string): Promise<Ticket> => {
-    await wait(500);
-    const ticket = initialTickets.find((t) => t.id === id);
-    if (!ticket) {
+    const response = await fetch(`/api/tickets/${id}`);
+    if (!response.ok) {
       throw new Error(`Ticket with id ${id} not found`);
     }
-    return ticket;
+    return response.json();
   }
 });
-
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
