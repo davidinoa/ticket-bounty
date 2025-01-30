@@ -4,12 +4,14 @@
   import { createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import type { Ticket } from '$lib/types';
+  import Spinner from '$lib/components/ui/spinner.svelte';
+  import { DEFAULT_PAGE_SIZE } from '@features/tickets/constants';
 
   let mountedItems = $state(new Set<string>());
 
   const tickets = createQuery<Ticket[], Error>({
-    queryKey: ['tickets', 10],
-    queryFn: () => api().getTickets(10)
+    queryKey: ['tickets', DEFAULT_PAGE_SIZE],
+    queryFn: () => api().getTickets(DEFAULT_PAGE_SIZE)
   });
 
   $effect(() => {
@@ -35,7 +37,7 @@
     <div class="mx-auto w-full max-w-lg space-y-4">
       {#if $tickets.isPending}
         <div class="flex justify-center">
-          <span>Loading...</span>
+          <Spinner size="lg" />
         </div>
       {:else if $tickets.error}
         <div class="text-destructive">

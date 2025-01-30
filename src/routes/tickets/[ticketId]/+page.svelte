@@ -8,6 +8,7 @@
   import { TICKET_ICONS } from '@features/tickets/constants';
   import { createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
+  import Spinner from '$lib/components/ui/spinner.svelte';
 
   export let data: PageData;
 
@@ -20,7 +21,7 @@
 
 {#if !ticketId || $ticketData.isPending}
   <div class="flex justify-center">
-    <span>Loading...</span>
+    <Spinner size="lg" />
   </div>
 {/if}
 
