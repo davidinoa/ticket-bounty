@@ -21,12 +21,12 @@
   <meta name="description" content="A platform for ticket bounties" />
   <meta name="theme-color" content="#111827" />
 </svelte:head>
-<Nav />
-<main
-  class="flex min-h-screen flex-1 flex-col overflow-y-auto overflow-x-hidden bg-background/20 px-8 py-24"
->
-  <QueryClientProvider client={queryClient}>
-    {@render children()}
-    <SvelteQueryDevtools />
-  </QueryClientProvider>
-</main>
+<div class="grid min-h-screen grid-cols-1">
+  <Nav />
+  <main class="h-full overflow-y-auto overflow-x-hidden bg-background/20 px-8 py-24">
+    <QueryClientProvider client={queryClient}>
+      {@render children()}
+      <SvelteQueryDevtools />
+    </QueryClientProvider>
+  </main>
+</div>

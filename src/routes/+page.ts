@@ -6,7 +6,7 @@ export const load: PageLoad = async ({ parent, fetch }) => {
   const { queryClient } = await parent();
 
   await queryClient.prefetchQuery({
-    queryKey: ['tickets', DEFAULT_PAGE_SIZE],
+    queryKey: ['tickets', { limit: DEFAULT_PAGE_SIZE }],
     queryFn: () => api(fetch).getTickets(DEFAULT_PAGE_SIZE)
   });
 };

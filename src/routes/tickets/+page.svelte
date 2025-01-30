@@ -6,11 +6,12 @@
   import type { Ticket } from '$lib/types';
   import Spinner from '$lib/components/ui/spinner.svelte';
   import { DEFAULT_PAGE_SIZE } from '@features/tickets/constants';
+  import ErrorBoundary from '$lib/components/error-boundary.svelte';
 
   let mountedItems = $state(new Set<string>());
 
   const tickets = createQuery<Ticket[], Error>({
-    queryKey: ['tickets', DEFAULT_PAGE_SIZE],
+    queryKey: ['tickets', { limit: DEFAULT_PAGE_SIZE }],
     queryFn: () => api().getTickets(DEFAULT_PAGE_SIZE)
   });
 
@@ -28,7 +29,7 @@
   });
 </script>
 
-<div class="mx-auto max-w-2xl">
+<div class="mx-auto grid h-full max-w-2xl grid-rows-[auto_1fr]">
   <Heading
     title="Tickets"
     description="Here are the tickets that have been submitted. You can view the details of each ticket and submit a solution if you have one."
@@ -40,9 +41,11 @@
           <Spinner size="lg" />
         </div>
       {:else if $tickets.error}
-        <div class="text-destructive">
-          <span>Error: {$tickets.error.message}</span>
-        </div>
+        <ErrorBoundary
+          error={$tickets.error}
+          reset={() => $tickets.refetch()}
+          message="Failed to load tickets"
+        />
       {:else}
         {#each $tickets.data as ticket}
           {#if mountedItems.has(ticket.id.toString())}

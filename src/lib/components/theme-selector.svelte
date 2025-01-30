@@ -3,6 +3,8 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { LucideSun, LucideMoon, LucideMonitor } from 'lucide-svelte';
+  import { cn } from '$lib/utils';
+  import { buttonVariants } from '$lib/components/ui/button';
 
   type Theme = 'dark' | 'light' | 'system';
   let isHydrated = $state(false);
@@ -37,17 +39,20 @@
 
 <div class="relative">
   <DropdownMenu.Root>
-    <DropdownMenu.Trigger>
-      <Button variant="outline" size="icon" class={!isHydrated ? 'invisible' : ''}>
-        {#if $theme === 'light'}
-          <LucideSun class="h-4 w-4" />
-        {:else if $theme === 'dark'}
-          <LucideMoon class="h-4 w-4" />
-        {:else}
-          <LucideMonitor class="h-4 w-4" />
-        {/if}
-        <span class="sr-only">Toggle theme</span>
-      </Button>
+    <DropdownMenu.Trigger
+      class={cn(
+        buttonVariants({ variant: 'outline', size: 'icon' }),
+        !isHydrated ? 'invisible' : ''
+      )}
+    >
+      {#if $theme === 'light'}
+        <LucideSun class="h-4 w-4" />
+      {:else if $theme === 'dark'}
+        <LucideMoon class="h-4 w-4" />
+      {:else}
+        <LucideMonitor class="h-4 w-4" />
+      {/if}
+      <span class="sr-only">Toggle theme</span>
     </DropdownMenu.Trigger>
     <DropdownMenu.Content align="end">
       <DropdownMenu.RadioGroup
