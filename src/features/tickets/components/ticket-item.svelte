@@ -5,13 +5,22 @@
   import { paths } from '../../../path';
   import { fade, fly } from 'svelte/transition';
   import { TICKET_ICONS } from '@features/tickets/constants';
+  import { api } from '$lib/api';
+  import { getContext } from 'svelte';
+  import type { QueryClient } from '@tanstack/svelte-query';
+  import { ticketKeys } from '../query-keys';
 
-  let { ticket }: { ticket: Ticket } = $props();
+  let { ticket, onPrefetch }: { ticket: Ticket; onPrefetch?: () => void } = $props();
   const Icon = TICKET_ICONS[ticket.status];
 </script>
 
 <div in:fly={{ y: 20, duration: 700 }} out:fade>
-  <a href={paths.tickets.detail(ticket.id.toString())} class="block">
+  <a
+    onmouseover={() => onPrefetch?.()}
+    onfocus={() => onPrefetch?.()}
+    href={paths.tickets.detail(ticket.id.toString())}
+    class="block"
+  >
     <Card.Root class="bg-muted/50 transition-transform hover:scale-[1.01] hover:bg-muted/70">
       <Card.Header>
         <Card.Title class="flex items-center justify-between text-xl">

@@ -9,12 +9,13 @@
   import { createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import Spinner from '$lib/components/ui/spinner.svelte';
+  import { ticketKeys } from '@features/tickets/query-keys';
 
-  export let data: PageData;
+  const { data } = $props();
+  const ticketId = data.ticketId;
 
-  const ticketId = data.id;
   const ticketData = createQuery({
-    queryKey: ['ticket', ticketId],
+    queryKey: ticketKeys.detail(ticketId),
     queryFn: () => api().getTicketById(ticketId)
   });
 </script>
@@ -104,7 +105,6 @@
             },
             children: 'Back to Tickets'
           }}
-          {Button}
         />
       </div>
     {/if}

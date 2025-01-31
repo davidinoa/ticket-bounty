@@ -1,17 +1,20 @@
 <script lang="ts">
   import Heading from '$lib/components/heading.svelte';
   import TicketItem from '../../features/tickets/components/ticket-item.svelte';
-  import { createQuery } from '@tanstack/svelte-query';
+  import { createQuery, type QueryClient } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import type { Ticket } from '$lib/types';
   import Spinner from '$lib/components/ui/spinner.svelte';
   import { DEFAULT_PAGE_SIZE } from '@features/tickets/constants';
   import ErrorBoundary from '$lib/components/error-boundary.svelte';
+  import { ticketKeys } from '@features/tickets/query-keys';
+  import { getContext } from 'svelte';
 
   let mountedItems = $state(new Set<string>());
+  const queryClient = getContext<QueryClient>('queryClient');
 
   const tickets = createQuery<Ticket[], Error>({
-    queryKey: ['tickets', { limit: DEFAULT_PAGE_SIZE }],
+    queryKey: ticketKeys.list({ limit: DEFAULT_PAGE_SIZE }),
     queryFn: () => api().getTickets(DEFAULT_PAGE_SIZE)
   });
 
@@ -27,6 +30,14 @@
       return () => clearTimeout(timeout);
     }
   });
+
+  function handlePrefetch(ticket: Ticket) {
+    queryClient.prefetchQuery({
+      queryKey: ticketKeys.detail(ticket.id.toString()),
+      queryFn: () => api().getTicketById(ticket.id.toString()),
+      retry: false
+    });
+  }
 </script>
 
 <div class="mx-auto grid h-full max-w-2xl grid-rows-[auto_1fr]">
@@ -49,7 +60,7 @@
       {:else}
         {#each $tickets.data as ticket}
           {#if mountedItems.has(ticket.id.toString())}
-            <TicketItem {ticket} />
+            <TicketItem {ticket} onPrefetch={() => handlePrefetch(ticket)} />
           {/if}
         {/each}
       {/if}

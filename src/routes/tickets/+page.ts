@@ -10,4 +10,8 @@ export const load: PageLoad = async ({ parent, fetch }) => {
     queryKey: ticketKeys.list({ limit: DEFAULT_PAGE_SIZE }),
     queryFn: () => api(fetch).getTickets(DEFAULT_PAGE_SIZE)
   });
+
+  return {
+    queryClient
+  };
 };

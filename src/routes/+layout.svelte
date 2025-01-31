@@ -4,6 +4,7 @@
   import { browser } from '$app/environment';
   import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
   import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
+  import { setContext } from 'svelte';
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -12,6 +13,8 @@
       }
     }
   });
+
+  setContext('queryClient', queryClient);
 
   let { children } = $props();
 </script>
