@@ -53,7 +53,7 @@
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{ticket.title}</h1>
       <span
-        class="flex items-center gap-2 rounded-full px-3 py-1 text-sm {getStatusColor(
+        class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium {getStatusColor(
           ticket.status
         )}"
       >
