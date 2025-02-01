@@ -1,6 +1,10 @@
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { env } from '$env/dynamic/private';
-if (!env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
-const client = neon(env.DATABASE_URL);
-export const db = drizzle(client);
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import { DATABASE_URL, DIRECT_URL } from '$env/static/private';
+
+// Connection for migrations
+export const migrationClient = postgres(DIRECT_URL, { max: 1 });
+
+// Connection for queries (uses connection pooling)
+const queryClient = postgres(DATABASE_URL);
+export const db = drizzle(queryClient);

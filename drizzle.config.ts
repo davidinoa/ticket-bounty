@@ -1,14 +1,15 @@
-import { defineConfig } from 'drizzle-kit';
-if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
+import type { Config } from 'drizzle-kit';
 
-export default defineConfig({
-	schema: './src/lib/server/db/schema.ts',
+if (!process.env.DIRECT_URL) {
+  throw new Error('DIRECT_URL is not set');
+}
 
-	dbCredentials: {
-		url: process.env.DATABASE_URL
-	},
-
-	verbose: true,
-	strict: true,
-	dialect: 'postgresql'
-});
+export default {
+  schema: './src/lib/server/db/schema.ts',
+  dbCredentials: {
+    url: process.env.DIRECT_URL
+  },
+  verbose: true,
+  strict: true,
+  dialect: 'postgresql'
+} satisfies Config;

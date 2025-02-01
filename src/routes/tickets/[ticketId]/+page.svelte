@@ -105,6 +105,7 @@
             },
             children: 'Back to Tickets'
           }}
+          {Button}
         />
       </div>
     {/if}
