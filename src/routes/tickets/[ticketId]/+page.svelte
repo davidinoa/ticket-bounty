@@ -24,27 +24,11 @@
   <div class="flex justify-center">
     <Spinner size="lg" />
   </div>
-{/if}
-
-{#if $ticketData.error}
+{:else if $ticketData.error}
   <div class="text-destructive">
     <span>Error: {$ticketData.error.message}</span>
   </div>
-{/if}
-
-<svelte:head>
-  <title
-    >{$ticketData.data?.success && $ticketData.data.data.title
-      ? `${$ticketData.data.data.title} - Ticket Bounty`
-      : 'Ticket Not Found - Ticket Bounty'}</title
-  >
-  <meta
-    name="description"
-    content={$ticketData.data?.success ? $ticketData.data.data.content : 'Ticket not found'}
-  />
-</svelte:head>
-
-{#if $ticketData.isSuccess && $ticketData.data.success}
+{:else if $ticketData.isSuccess && $ticketData.data.success}
   {@const ticket = $ticketData.data.data}
   {@const Icon = TICKET_ICONS[ticket.status]}
   <div class="mx-auto w-full min-w-fit max-w-xl">
@@ -111,3 +95,15 @@
     />
   </div>
 {/if}
+
+<svelte:head>
+  <title
+    >{$ticketData.data?.success && $ticketData.data.data.title
+      ? `${$ticketData.data.data.title} - Ticket Bounty`
+      : 'Ticket Not Found - Ticket Bounty'}</title
+  >
+  <meta
+    name="description"
+    content={$ticketData.data?.success ? $ticketData.data.data.content : 'Ticket not found'}
+  />
+</svelte:head>
