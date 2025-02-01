@@ -10,6 +10,7 @@
   import Spinner from '$lib/components/ui/spinner.svelte';
   import { ticketKeys } from '@features/tickets/query-keys';
   import { formatStatus } from '$lib/utils/ticketUtils';
+  import ErrorBoundary from '$lib/components/error-boundary.svelte';
 
   const { data } = $props();
   const ticketId = data.ticketId;
@@ -25,9 +26,11 @@
     <Spinner size="lg" />
   </div>
 {:else if $ticketData.error}
-  <div class="text-destructive">
-    <span>Error: {$ticketData.error.message}</span>
-  </div>
+  <ErrorBoundary
+    error={$ticketData.error}
+    reset={() => $ticketData.refetch()}
+    message="Failed to load ticket details"
+  />
 {:else if $ticketData.isSuccess && $ticketData.data.success}
   {@const ticket = $ticketData.data.data}
   {@const Icon = TICKET_ICONS[ticket.status]}
