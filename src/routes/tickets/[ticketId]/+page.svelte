@@ -5,7 +5,7 @@
   import NotFound from '$lib/components/not-found.svelte';
   import { getStatusColor } from '$lib/utils/ticketUtils';
   import { TICKET_ICONS } from '@features/tickets/constants';
-  import { createQuery } from '@tanstack/svelte-query';
+  import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import Spinner from '$lib/components/ui/spinner.svelte';
   import { ticketKeys } from '@features/tickets/query-keys';
@@ -14,28 +14,44 @@
 
   const { data } = $props();
   const ticketId = data.ticketId;
+  const queryClient = useQueryClient();
 
-  const ticketData = createQuery({
+  const queryData = createQuery({
     queryKey: ticketKeys.detail(ticketId),
     queryFn: () => api().getTicketById(ticketId)
   });
+
+  const mutation = createMutation({
+    mutationFn: () => api().deleteTicket(ticketId),
+    onSuccess: (result) => {
+      if (result.success) {
+        queryClient.invalidateQueries({ queryKey: ticketKeys.list() });
+        window.location.href = paths.tickets.list();
+      } else {
+        alert('Failed to delete ticket: ' + result.error);
+      }
+    },
+    onError: (error) => {
+      alert('Failed to delete ticket: ' + error.message);
+    }
+  });
 </script>
 
-{#if !ticketId || $ticketData.isPending}
+{#if !ticketId || $queryData.isPending}
   <div class="flex justify-center">
     <Spinner size="lg" />
   </div>
-{:else if $ticketData.error}
+{:else if $queryData.error}
   <ErrorBoundary
-    error={$ticketData.error}
-    reset={() => $ticketData.refetch()}
+    error={$queryData.error}
+    reset={() => $queryData.refetch()}
     message="Failed to load ticket details"
   />
-{:else if $ticketData.isSuccess && $ticketData.data.success}
-  {@const ticket = $ticketData.data.data}
+{:else if $queryData.isSuccess && $queryData.data.success}
+  {@const ticket = $queryData.data.data}
   {@const Icon = TICKET_ICONS[ticket.status]}
   <div class="mx-auto w-full min-w-fit max-w-xl">
-    <div class="mb-8">
+    <div class="mb-8 flex items-center justify-between">
       <Button
         href={paths.tickets.list()}
         variant="ghost"
@@ -50,6 +66,38 @@
           />
         </svg>
         Back to Tickets
+      </Button>
+      <Button
+        variant="outline"
+        class="text-destructive hover:bg-destructive/10"
+        onclick={() => {
+          if (
+            confirm('Are you sure you want to delete this ticket? This action cannot be undone.')
+          ) {
+            $mutation.mutate();
+          }
+        }}
+        disabled={$mutation.isPending}
+      >
+        {#if $mutation.isPending}
+          <Spinner class="mr-2 h-4 w-4" />
+        {:else}
+          <svg
+            class="mr-2 h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+        {/if}
+        Delete Ticket
       </Button>
     </div>
 
@@ -101,12 +149,12 @@
 
 <svelte:head>
   <title
-    >{$ticketData.data?.success && $ticketData.data.data.title
-      ? `${$ticketData.data.data.title} - Ticket Bounty`
+    >{$queryData.data?.success && $queryData.data.data.title
+      ? `${$queryData.data.data.title} - Ticket Bounty`
       : 'Ticket Not Found - Ticket Bounty'}</title
   >
   <meta
     name="description"
-    content={$ticketData.data?.success ? $ticketData.data.data.content : 'Ticket not found'}
+    content={$queryData.data?.success ? $queryData.data.data.content : 'Ticket not found'}
   />
 </svelte:head>

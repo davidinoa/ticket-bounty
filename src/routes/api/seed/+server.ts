@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { db } from '$lib/server/db';
+import { dbPromise } from '$lib/server/db';
 import { tickets } from '$lib/server/db/schema';
 
 const seedTickets = [
@@ -44,6 +44,9 @@ const seedTickets = [
 export async function POST() {
   try {
     console.log('Starting database seed...');
+
+    // Get database instance
+    const { db } = await dbPromise;
 
     // Delete all existing tickets
     console.log('Clearing existing tickets...');

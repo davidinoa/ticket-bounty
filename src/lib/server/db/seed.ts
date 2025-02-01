@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { db } from '.';
+import { dbPromise } from '.';
 import { tickets } from './schema';
 
 const seedTickets = [
@@ -44,6 +44,9 @@ const seedTickets = [
 async function seed() {
   try {
     console.log('Starting database seed...');
+
+    // Get database instance
+    const { db } = await dbPromise;
 
     // Delete all existing tickets
     console.log('Clearing existing tickets...');

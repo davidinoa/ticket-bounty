@@ -39,5 +39,19 @@ export const api = (fetch = window.fetch) => ({
     }
     const data = await response.json();
     return { success: true, data };
+  },
+
+  deleteTicket: async (id: string): Promise<Result<void>> => {
+    const response = await fetch(`/api/tickets/${id}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) {
+      return {
+        success: false,
+        error: 'Failed to delete ticket',
+        status: response.status
+      };
+    }
+    return { success: true, data: undefined };
   }
 });
