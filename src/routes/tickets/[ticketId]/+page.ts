@@ -13,6 +13,7 @@ export const load: PageLoad = async ({ params, parent, fetch }) => {
 
     return { ticketId: params.ticketId };
   } catch (error) {
+    console.error({ error });
     throw error instanceof Error ? error : new Error('Failed to load ticket');
   }
 };

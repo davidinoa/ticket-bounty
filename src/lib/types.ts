@@ -7,8 +7,17 @@ export const TicketStatus = {
 export type TicketStatus = (typeof TicketStatus)[keyof typeof TicketStatus];
 
 export type Ticket = {
-  id: string | number;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
   title: string;
   content: string;
   status: TicketStatus;
+  userId: string | null;
 };
+
+export type Result<T, E = string> =
+  | { success: true; data: T }
+  | { success: false; error: E; status: number };
+
+export type TicketResult = Result<Ticket>;

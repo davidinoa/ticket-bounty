@@ -9,6 +9,7 @@
   import { getContext } from 'svelte';
   import type { QueryClient } from '@tanstack/svelte-query';
   import { ticketKeys } from '../query-keys';
+  import { formatStatus } from '$lib/utils/ticketUtils';
 
   let { ticket, onPrefetch }: { ticket: Ticket; onPrefetch?: () => void } = $props();
   const Icon = TICKET_ICONS[ticket.status];
@@ -18,7 +19,7 @@
   <a
     onmouseover={() => onPrefetch?.()}
     onfocus={() => onPrefetch?.()}
-    href={paths.tickets.detail(ticket.id.toString())}
+    href={paths.tickets.detail(ticket.id)}
     class="block"
   >
     <Card.Root class="bg-muted/50 transition-transform hover:scale-[1.01] hover:bg-muted/70">
@@ -29,6 +30,7 @@
           </div>
           <span class="rounded-full px-3 py-1 text-sm {getStatusColor(ticket.status)}">
             <Icon class="size-4" />
+            {formatStatus(ticket.status)}
           </span>
         </Card.Title>
       </Card.Header>

@@ -15,7 +15,11 @@
 
   const tickets = createQuery<Ticket[], Error>({
     queryKey: ticketKeys.list({ limit: DEFAULT_PAGE_SIZE }),
-    queryFn: () => api().getTickets(DEFAULT_PAGE_SIZE)
+    queryFn: async () => {
+      const result = await api().getTickets(DEFAULT_PAGE_SIZE);
+      if (!result.success) throw new Error(result.error);
+      return result.data;
+    }
   });
 
   $effect(() => {
@@ -23,7 +27,7 @@
       let timeout: NodeJS.Timeout;
       $tickets.data.forEach((ticket, index) => {
         timeout = setTimeout(() => {
-          mountedItems = new Set([...mountedItems, ticket.id.toString()]);
+          mountedItems = new Set([...mountedItems, ticket.id]);
         }, index * 300);
       });
 
@@ -33,8 +37,8 @@
 
   function handlePrefetch(ticket: Ticket) {
     queryClient.prefetchQuery({
-      queryKey: ticketKeys.detail(ticket.id.toString()),
-      queryFn: () => api().getTicketById(ticket.id.toString()),
+      queryKey: ticketKeys.detail(ticket.id),
+      queryFn: () => api().getTicketById(ticket.id),
       retry: false
     });
   }
@@ -59,7 +63,7 @@
         />
       {:else}
         {#each $tickets.data as ticket}
-          {#if mountedItems.has(ticket.id.toString())}
+          {#if mountedItems.has(ticket.id)}
             <TicketItem {ticket} onPrefetch={() => handlePrefetch(ticket)} />
           {/if}
         {/each}
