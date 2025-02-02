@@ -9,6 +9,9 @@
   import ErrorBoundary from '$lib/components/error-boundary.svelte';
   import { ticketKeys } from '@features/tickets/query-keys';
   import { getContext } from 'svelte';
+  import type { PageData } from './$types';
+
+  const { data } = $props<{ data: PageData }>();
 
   let mountedItems = $state(new Set<string>());
   const queryClient = getContext<QueryClient>('queryClient');
@@ -44,30 +47,32 @@
   }
 </script>
 
-<div class="mx-auto grid h-full max-w-2xl grid-rows-[auto_1fr]">
-  <Heading
-    title="Tickets"
-    description="Here are the tickets that have been submitted. You can view the details of each ticket and submit a solution if you have one."
-  />
-  <div class="mt-8 grid gap-8">
-    <div class="mx-auto w-full max-w-lg space-y-4">
-      {#if $tickets.isPending}
-        <div class="flex justify-center">
-          <Spinner size="lg" />
-        </div>
-      {:else if $tickets.error}
-        <ErrorBoundary
-          error={$tickets.error}
-          reset={() => $tickets.refetch()}
-          message="Failed to load tickets"
-        />
-      {:else}
-        {#each $tickets.data as ticket}
-          {#if mountedItems.has(ticket.id)}
-            <TicketItem {ticket} onPrefetch={() => handlePrefetch(ticket)} />
-          {/if}
-        {/each}
-      {/if}
+<div class="container mx-auto p-6">
+  <div class="mx-auto grid h-full max-w-2xl grid-rows-[auto_1fr]">
+    <Heading
+      title="Tickets"
+      description="Here are the tickets that have been submitted. You can view the details of each ticket and submit a solution if you have one."
+    />
+    <div class="mt-8 grid gap-8">
+      <div class="mx-auto w-full max-w-lg space-y-4">
+        {#if $tickets.isPending}
+          <div class="flex justify-center">
+            <Spinner size="lg" />
+          </div>
+        {:else if $tickets.error}
+          <ErrorBoundary
+            error={$tickets.error}
+            reset={() => $tickets.refetch()}
+            message="Failed to load tickets"
+          />
+        {:else}
+          {#each $tickets.data as ticket}
+            {#if mountedItems.has(ticket.id)}
+              <TicketItem {ticket} onPrefetch={() => handlePrefetch(ticket)} />
+            {/if}
+          {/each}
+        {/if}
+      </div>
     </div>
   </div>
 </div>
