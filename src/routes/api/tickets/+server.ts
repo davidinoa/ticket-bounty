@@ -1,8 +1,8 @@
+import { ticketFormSchema } from '@features/tickets/schema';
 import { json } from '@sveltejs/kit';
 import { desc } from 'drizzle-orm';
 import { dbPromise } from '$lib/server/db';
 import { tickets } from '$lib/server/db/schema';
-import { TicketStatus } from '$lib/types';
 import type { RequestEvent } from './$types';
 
 export async function GET({ url }: RequestEvent) {
@@ -22,26 +22,16 @@ export async function GET({ url }: RequestEvent) {
 
 export async function POST({ request }: RequestEvent) {
   try {
-    const formData = await request.formData();
-    const title = formData.get('title')?.toString();
-    const content = formData.get('content')?.toString();
-    const status = formData.get('status')?.toString() as TicketStatus;
+    const formData = await request.json();
+    const validation = ticketFormSchema.safeParse(formData);
 
-    if (!title || !content || !status) {
-      return json({ error: 'Missing required fields' }, { status: 400 });
+    if (!validation.success) {
+      return json({ errors: validation.error.flatten() }, { status: 400 });
     }
 
     const { db } = await dbPromise;
-    const [newTicket] = await db
-      .insert(tickets)
-      .values({
-        title,
-        content,
-        status
-      })
-      .returning();
-
-    return json(newTicket);
+    const [newTicket] = await db.insert(tickets).values(validation.data).returning();
+    return json({ success: true, ticket: newTicket });
   } catch (error) {
     console.error('Error creating ticket:', error);
     return json({ error: 'Failed to create ticket' }, { status: 500 });

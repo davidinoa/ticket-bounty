@@ -1,42 +1,39 @@
 import { fail } from '@sveltejs/kit';
-import { dbPromise } from '$lib/server/db';
-import { tickets } from '$lib/server/db/schema';
-import type { TicketStatus } from '$lib/types';
-import type { Actions } from './$types';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { ticketFormSchema } from '../../../features/tickets/schema';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load = (async () => {
+  const form = await superValidate(zod(ticketFormSchema));
+  return { form };
+}) satisfies PageServerLoad;
 
 export const actions = {
-  default: async ({ request }) => {
-    try {
-      const formData = await request.formData();
-      const title = formData.get('title')?.toString();
-      const content = formData.get('content')?.toString();
-      const status = formData.get('status')?.toString() as TicketStatus;
+  default: async (event) => {
+    const form = await superValidate(event, zod(ticketFormSchema));
 
-      if (!title || !content || !status) {
-        return fail(400, {
-          missing: true,
-          data: {
-            title: formData.get('title'),
-            content: formData.get('content'),
-            status: formData.get('status')
-          }
-        });
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+
+    try {
+      const response = await event.fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form.data)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        return fail(response.status, { form, error: error.message });
       }
 
-      const { db } = await dbPromise;
-      const [newTicket] = await db
-        .insert(tickets)
-        .values({
-          title,
-          content,
-          status
-        })
-        .returning();
-
-      return { success: true, ticket: newTicket };
+      const { ticket } = await response.json();
+      return { form, success: true, ticket };
     } catch (error) {
       console.error('Error creating ticket:', error);
-      return fail(500, { error: true });
+      return fail(500, { form, error: 'Failed to create ticket' });
     }
   }
 } satisfies Actions;

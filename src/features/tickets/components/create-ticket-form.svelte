@@ -1,97 +1,77 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
-  import type { ActionResult } from '@sveltejs/kit';
+  import { Button } from '$lib/components/ui/button';
   import { TicketStatus } from '$lib/types';
-  import type { ActionData } from '../../../routes/tickets/new/$types';
+  import { ticketFormSchema } from '../schema';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import type { SuperValidated } from 'sveltekit-superforms';
+  import type { z } from 'zod';
+  import * as Form from '$lib/components/ui/form';
+  import { Input } from '$lib/components/ui/input';
+  import { Textarea } from '$lib/components/ui/textarea';
 
-  const { form } = $props<{ form: ActionData | null }>();
-  let isSubmitting = $state(false);
+  type FormSchema = z.infer<typeof ticketFormSchema>;
+  let { data }: { data: SuperValidated<FormSchema> } = $props();
 
-  const handleSubmit = () => {
-    isSubmitting = true;
-    return async ({ result, update }: { result: ActionResult; update: () => Promise<void> }) => {
-      isSubmitting = false;
+  const form = superForm(data, {
+    validators: zodClient(ticketFormSchema),
+    onResult: async ({ result }) => {
       if (result.type === 'success') {
         const data = result.data;
         if (data?.success && data.ticket) {
           await goto(`/tickets/${data.ticket.id}`);
-        } else {
-          await update();
         }
       }
-    };
-  };
+    }
+  });
+
+  const { form: formData, enhance, submitting } = form;
 </script>
 
-<form method="POST" class="space-y-4" use:enhance={handleSubmit}>
-  {#if form?.missing}
-    <div class="rounded-md bg-red-50 p-4 text-red-700 dark:bg-red-950 dark:text-red-200">
-      <p>All fields are required</p>
-    </div>
-  {/if}
+<form method="POST" use:enhance class="space-y-6">
+  <Form.Field {form} name="title">
+    <Form.Control let:attrs>
+      <Form.Label>Title</Form.Label>
+      <Input {...attrs} bind:value={$formData.title} placeholder="Enter ticket title" />
+    </Form.Control>
+    <Form.Description>The title of your ticket</Form.Description>
+    <Form.FieldErrors />
+  </Form.Field>
 
-  {#if form?.error}
-    <div class="rounded-md bg-red-50 p-4 text-red-700 dark:bg-red-950 dark:text-red-200">
-      <p>Something went wrong. Please try again.</p>
-    </div>
-  {/if}
+  <Form.Field {form} name="content">
+    <Form.Control let:attrs>
+      <Form.Label>Content</Form.Label>
+      <Textarea
+        {...attrs}
+        bind:value={$formData.content}
+        placeholder="Describe the ticket..."
+        rows={4}
+      />
+    </Form.Control>
+    <Form.Description>Provide a detailed description of the ticket</Form.Description>
+    <Form.FieldErrors />
+  </Form.Field>
 
-  <div class="space-y-2">
-    <label for="title" class="block text-sm font-medium dark:text-gray-200">Title</label>
-    <input
-      type="text"
-      id="title"
-      name="title"
-      required
-      value={form?.data?.title ?? ''}
-      class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
-      placeholder="Enter ticket title"
-    />
-  </div>
+  <Form.Field {form} name="status">
+    <Form.Control let:attrs>
+      <Form.Label>Status</Form.Label>
+      <select
+        {...attrs}
+        bind:value={$formData.status}
+        class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <option value="" disabled>Select a status</option>
+        {#each Object.values(TicketStatus) as status}
+          <option value={status}>{status}</option>
+        {/each}
+      </select>
+    </Form.Control>
+    <Form.Description>Current status of the ticket</Form.Description>
+    <Form.FieldErrors />
+  </Form.Field>
 
-  <div class="space-y-2">
-    <label for="content" class="block text-sm font-medium dark:text-gray-200">Content</label>
-    <textarea
-      id="content"
-      name="content"
-      required
-      rows="4"
-      class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
-      placeholder="Describe the ticket...">{form?.data?.content ?? ''}</textarea
-    >
-  </div>
-
-  <div class="space-y-2">
-    <label for="status" class="block text-sm font-medium dark:text-gray-200">Status</label>
-    <select
-      id="status"
-      name="status"
-      required
-      class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-    >
-      {#each Object.values(TicketStatus) as status}
-        <option value={status} selected={form?.data?.status === status}>
-          {status}
-        </option>
-      {/each}
-    </select>
-  </div>
-
-  <button
-    type="submit"
-    disabled={isSubmitting}
-    class="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
-  >
-    {isSubmitting ? 'Creating...' : 'Create Ticket'}
-  </button>
+  <Button type="submit" disabled={$submitting} class="w-full">
+    {$submitting ? 'Creating...' : 'Create Ticket'}
+  </Button>
 </form>
-
-<style>
-  input:focus,
-  textarea:focus,
-  select:focus {
-    outline: 2px solid rgb(37 99 235);
-    outline-offset: 2px;
-  }
-</style>
