@@ -8,20 +8,23 @@ if (!import.meta.env?.VITE) {
 }
 
 // Get database URLs based on context
-const getDatabaseUrl = () => {
-  try {
-    // Try SvelteKit's env first
+const getDatabaseUrl = async () => {
+  if (process.env.DATABASE_URL && process.env.DIRECT_URL) {
+    return {
+      DATABASE_URL: process.env.DATABASE_URL,
+      DIRECT_URL: process.env.DIRECT_URL
+    };
+  }
+
+  // Only try to import from $env if we're in a SvelteKit context
+  if (import.meta.env?.VITE) {
     return import('$env/static/private').then((env) => ({
       DATABASE_URL: env.DATABASE_URL,
       DIRECT_URL: env.DIRECT_URL
     }));
-  } catch {
-    // Fallback to process.env (for direct Node.js scripts)
-    return Promise.resolve({
-      DATABASE_URL: process.env.DATABASE_URL!,
-      DIRECT_URL: process.env.DIRECT_URL!
-    });
   }
+
+  throw new Error('Database URLs not found in environment variables');
 };
 
 // Initialize database connections
