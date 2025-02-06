@@ -54,7 +54,7 @@
       description="Here are the tickets that have been submitted. You can view the details of each ticket and submit a solution if you have one."
     />
     <div class="mt-8 grid gap-8">
-      <div class="mx-auto w-full max-w-lg space-y-4">
+      <div class="mx-auto w-full max-w-lg space-y-4" data-testid="ticket-list">
         {#if $tickets.isPending}
           <div class="flex justify-center">
             <Spinner size="lg" />
@@ -62,8 +62,8 @@
         {:else if $tickets.error}
           <ErrorBoundary
             error={$tickets.error}
-            reset={() => $tickets.refetch()}
-            message="Failed to load tickets"
+            reset={$tickets.refetch}
+            message={$tickets.error?.message}
           />
         {:else}
           {#each $tickets.data as ticket}

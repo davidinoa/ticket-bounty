@@ -16,8 +16,8 @@
   <div transition:fade class="flex w-full flex-1 items-center justify-center p-8">
     <div class="space-y-4 text-center">
       <Icon class="mx-auto size-12 text-red-500" />
-      <h2 class="text-xl font-medium text-red-600">{message}</h2>
-      <p class="text-sm text-muted-foreground">{error.message}</p>
+      <h3 class="text-xl font-medium text-red-600">Oops! Something went wrong</h3>
+      <p class="text-sm text-muted-foreground">{message}</p>
 
       {#if reset}
         <div class="pt-4">

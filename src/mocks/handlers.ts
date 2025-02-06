@@ -1,8 +1,14 @@
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
-  http.get('/api/tickets', () => {
-    // return passthrough();
+  http.get('/api/tickets', ({ request }) => {
+    const originUrl = new URL(request.referrer);
+    const searchParams = new URLSearchParams(originUrl.search);
+    const shouldError = searchParams.get('error') === 'true';
+
+    if (shouldError) {
+      return HttpResponse.json({ error: 'Failed to load tickets' }, { status: 500 });
+    }
     return HttpResponse.json([
       {
         id: '5b2aafbf-3cce-48a3-9a56-8352575ee971',

@@ -5,21 +5,10 @@ if (dev) {
 
   await worker.start({
     onUnhandledRequest(request, print) {
-      // Do not warn on unhandled internal Svelte requests.
-      // Those are not meant to be mocked.
-      if (request.url.includes('svelte')) {
-        return;
-      }
-
-      // Do not warn on unhandled internal node_modules requests.
-      if (request.url.includes('node_modules')) {
-        return;
-      }
-
-      if (!request.url.includes('api')) {
-        return;
-      }
-
+      const isInternalRequest =
+        request.url.includes('svelte') || request.url.includes('node_modules');
+      const isNotApiRequest = !request.url.includes('api');
+      if (isInternalRequest || isNotApiRequest) return;
       print.warning();
     }
   });
