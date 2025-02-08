@@ -5,7 +5,7 @@
   import { api } from '$lib/api';
   import type { Ticket } from '$lib/types';
   import Spinner from '$lib/components/ui/spinner.svelte';
-  import { DEFAULT_PAGE_SIZE } from '@features/tickets/constants';
+  import { DEFAULT_PAGE_SIZE } from '$features/tickets/constants';
   import ErrorBoundary from '$lib/components/error-boundary.svelte';
   import { ticketKeys } from '@features/tickets/query-keys';
   import { getContext } from 'svelte';
