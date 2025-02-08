@@ -1,3 +1,4 @@
+import type { TicketFormData } from '@features/tickets/schema';
 import type { Result, Ticket, TicketResult } from './types';
 
 export const api = (fetch = window.fetch) => ({
@@ -53,5 +54,19 @@ export const api = (fetch = window.fetch) => ({
       };
     }
     return { success: true, data: undefined };
+  },
+
+  createTicket: async (ticketData: TicketFormData): Promise<TicketResult> => {
+    const response = await fetch(`/api/tickets`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ticketData)
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      return { success: false, error: error.message, status: response.status };
+    }
+    const data = await response.json();
+    return { success: true, data: data.ticket };
   }
 });

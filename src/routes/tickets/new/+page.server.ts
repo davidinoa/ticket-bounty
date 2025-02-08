@@ -2,6 +2,7 @@ import { fail } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { ticketFormSchema } from '../../../features/tickets/schema';
+import { api } from '../../../lib/api';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async () => {
@@ -18,19 +19,13 @@ export const actions = {
     }
 
     try {
-      const response = await event.fetch('/api/tickets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form.data)
-      });
+      const ticketResult = await api(event.fetch).createTicket(form.data);
 
-      if (!response.ok) {
-        const error = await response.json();
-        return fail(response.status, { form, error: error.message });
+      if (!ticketResult.success) {
+        return fail(ticketResult.status, { form, error: ticketResult.error });
       }
 
-      const { ticket } = await response.json();
-      return { form, success: true, ticket };
+      return { form, success: true, ticket: ticketResult.data };
     } catch (error) {
       console.error('Error creating ticket:', error);
       return fail(500, { form, error: 'Failed to create ticket' });
