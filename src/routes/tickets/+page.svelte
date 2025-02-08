@@ -11,7 +11,7 @@
   import { getContext } from 'svelte';
   import type { PageData } from './$types';
 
-  const { data } = $props<{ data: PageData }>();
+  const { data } = $props();
 
   let mountedItems = $state(new Set<string>());
   const queryClient = getContext<QueryClient>('queryClient');
@@ -22,7 +22,8 @@
       const result = await api().getTickets(DEFAULT_PAGE_SIZE);
       if (!result.success) throw new Error(result.error);
       return result.data;
-    }
+    },
+    select: (data) => data.toReversed()
   });
 
   $effect(() => {

@@ -9,7 +9,7 @@ export async function GET({ url }: RequestEvent) {
   try {
     const { db } = await dbPromise;
     const limit = Number(url.searchParams.get('limit')) || 10;
-    const result = await db.select().from(tickets).limit(limit).orderBy(desc(tickets.createdAt));
+    const result = await db.select().from(tickets).limit(limit).orderBy(desc(tickets.updatedAt));
     return json(result);
   } catch (error) {
     console.error('Error fetching tickets:', error);

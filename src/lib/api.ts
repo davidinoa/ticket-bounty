@@ -38,8 +38,8 @@ export const api = (fetch = window.fetch) => ({
         status: response.status
       };
     }
-    const data = await response.json();
-    return { success: true, data };
+    const result = await response.json();
+    return result;
   },
 
   deleteTicket: async (id: string): Promise<Result<void>> => {
@@ -53,7 +53,8 @@ export const api = (fetch = window.fetch) => ({
         status: response.status
       };
     }
-    return { success: true, data: undefined };
+    const result = await response.json();
+    return result;
   },
 
   createTicket: async (ticketData: TicketFormData): Promise<TicketResult> => {
@@ -67,6 +68,20 @@ export const api = (fetch = window.fetch) => ({
       return { success: false, error: error.message, status: response.status };
     }
     const data = await response.json();
-    return { success: true, data: data.ticket };
+    return data;
+  },
+
+  updateTicket: async (id: string, ticketData: TicketFormData): Promise<TicketResult> => {
+    const response = await fetch(`/api/tickets/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ticketData)
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      return { success: false, error: error.message, status: response.status };
+    }
+    const data = await response.json();
+    return data;
   }
 });
