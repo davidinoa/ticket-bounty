@@ -15,7 +15,7 @@ const config = {
       runtime: 'nodejs20.x'
     }),
     alias: {
-      '@features/*': './src/features/*'
+      $features: 'src/features'
     }
   }
 };
