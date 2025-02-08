@@ -4,7 +4,7 @@
   import { getStatusColor } from '$lib/utils/ticketUtils';
   import { paths } from '../../../path';
   import { fade, fly } from 'svelte/transition';
-  import { TICKET_ICONS } from '@features/tickets/constants';
+  import { TICKET_ICONS } from '$features/tickets/constants';
 
   let { ticket, onPrefetch }: { ticket: Ticket; onPrefetch?: () => void } = $props();
   const Icon = TICKET_ICONS[ticket.status];

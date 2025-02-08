@@ -1,6 +1,6 @@
-import { ticketFormSchema } from '@features/tickets/schema';
 import { json } from '@sveltejs/kit';
 import { desc } from 'drizzle-orm';
+import { ticketFormSchema } from '$features/tickets/schema';
 import { dbPromise } from '$lib/server/db';
 import { tickets } from '$lib/server/db/schema';
 import type { RequestEvent } from './$types';

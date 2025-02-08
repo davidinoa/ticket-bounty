@@ -1,5 +1,5 @@
-import { DEFAULT_PAGE_SIZE } from '@features/tickets/constants';
-import { ticketKeys } from '@features/tickets/query-keys';
+import { DEFAULT_PAGE_SIZE } from '$features/tickets/constants';
+import { ticketKeys } from '$features/tickets/query-keys';
 import { api } from '$lib/api';
 import type { PageLoad } from './$types';
 

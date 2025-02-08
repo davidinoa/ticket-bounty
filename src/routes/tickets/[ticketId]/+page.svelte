@@ -4,11 +4,11 @@
   import { Button } from '$lib/components/ui/button';
   import NotFound from '$lib/components/not-found.svelte';
   import { getStatusColor } from '$lib/utils/ticketUtils';
-  import { TICKET_ICONS } from '@features/tickets/constants';
+  import { TICKET_ICONS } from '$features/tickets/constants';
   import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import Spinner from '$lib/components/ui/spinner.svelte';
-  import { ticketKeys } from '@features/tickets/query-keys';
+  import { ticketKeys } from '$features/tickets/query-keys';
   import { formatStatus } from '$lib/utils/ticketUtils';
   import ErrorBoundary from '$lib/components/error-boundary.svelte';
 

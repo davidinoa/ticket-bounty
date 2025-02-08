@@ -1,4 +1,4 @@
-import type { TicketFormData } from '@features/tickets/schema';
+import type { TicketFormData } from '$features/tickets/schema';
 import type { Result, Ticket, TicketResult } from './types';
 
 export const api = (fetch = window.fetch) => ({

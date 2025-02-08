@@ -1,4 +1,4 @@
-import { ticketKeys } from '@features/tickets/query-keys';
+import { ticketKeys } from '$features/tickets/query-keys';
 import { api } from '$lib/api';
 import type { PageLoad } from './$types';
 
