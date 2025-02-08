@@ -10,6 +10,7 @@
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
+  import { formatStatus } from '$lib/utils/ticketUtils';
 
   type FormSchema = z.infer<typeof ticketFormSchema>;
   let { data }: { data: SuperValidated<FormSchema> } = $props();
@@ -63,7 +64,7 @@
       >
         <option value="" disabled>Select a status</option>
         {#each Object.values(TicketStatus) as status}
-          <option value={status}>{status}</option>
+          <option value={status}>{formatStatus(status)}</option>
         {/each}
       </select>
     </Form.Control>
