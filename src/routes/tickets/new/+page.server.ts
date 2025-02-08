@@ -1,8 +1,8 @@
 import { fail } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { ticketFormSchema } from '../../../features/tickets/schema';
-import { api } from '../../../lib/api';
+import { ticketFormSchema } from '$features/tickets/schema';
+import { api } from '$lib/api';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async () => {
