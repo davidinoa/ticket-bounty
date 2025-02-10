@@ -5,7 +5,6 @@
   import { superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import type { SuperValidated } from 'sveltekit-superforms';
-  import type { z } from 'zod';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
