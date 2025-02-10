@@ -21,7 +21,7 @@
     }
   });
 
-  const { form: formData, enhance, submitting } = form;
+  const { form: formData, enhance, submitting, errors } = form;
 </script>
 
 <form method="POST" use:enhance class="space-y-6">
@@ -31,7 +31,7 @@
       <Input {...attrs} bind:value={$formData.title} placeholder="Enter ticket title" />
     </Form.Control>
     <Form.Description>The title of your ticket</Form.Description>
-    <Form.FieldErrors />
+    <Form.FieldErrors>{$errors.title}</Form.FieldErrors>
   </Form.Field>
 
   <Form.Field {form} name="content">
@@ -45,7 +45,7 @@
       />
     </Form.Control>
     <Form.Description>Provide a detailed description of the ticket</Form.Description>
-    <Form.FieldErrors />
+    <Form.FieldErrors>{$errors.content}</Form.FieldErrors>
   </Form.Field>
 
   <Form.Field {form} name="status">
@@ -63,7 +63,7 @@
       </select>
     </Form.Control>
     <Form.Description>Current status of the ticket</Form.Description>
-    <Form.FieldErrors />
+    <Form.FieldErrors>{$errors.status}</Form.FieldErrors>
   </Form.Field>
 
   <div class="flex gap-4">
