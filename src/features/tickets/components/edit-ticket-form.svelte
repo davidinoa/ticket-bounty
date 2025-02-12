@@ -8,6 +8,7 @@
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
+  import * as Card from '$lib/components/ui/card';
   import { formatStatus } from '$lib/utils/ticketUtils';
 
   let { data, ticketId }: { data: SuperValidated<TicketFormData>; ticketId: string } = $props();
@@ -24,54 +25,64 @@
   const { form: formData, enhance, submitting, errors } = form;
 </script>
 
-<form method="POST" use:enhance class="space-y-6">
-  <Form.Field {form} name="title">
-    <Form.Control let:attrs>
-      <Form.Label>Title</Form.Label>
-      <Input {...attrs} bind:value={$formData.title} placeholder="Enter ticket title" />
-    </Form.Control>
-    <Form.Description>The title of your ticket</Form.Description>
-    <Form.FieldErrors>{$errors.title}</Form.FieldErrors>
-  </Form.Field>
+<Card.Root class="mx-auto w-full max-w-2xl bg-card/50">
+  <Card.Content class="p-6">
+    <form method="POST" use:enhance class="space-y-6">
+      <Form.Field {form} name="title">
+        <Form.Control let:attrs>
+          <Form.Label>Title</Form.Label>
+          <Input
+            {...attrs}
+            bind:value={$formData.title}
+            placeholder="Enter ticket title"
+            class="bg-input"
+          />
+        </Form.Control>
+        <Form.Description>The title of your ticket</Form.Description>
+        <Form.FieldErrors>{$errors.title}</Form.FieldErrors>
+      </Form.Field>
 
-  <Form.Field {form} name="content">
-    <Form.Control let:attrs>
-      <Form.Label>Content</Form.Label>
-      <Textarea
-        {...attrs}
-        bind:value={$formData.content}
-        placeholder="Describe the ticket..."
-        rows={4}
-      />
-    </Form.Control>
-    <Form.Description>Provide a detailed description of the ticket</Form.Description>
-    <Form.FieldErrors>{$errors.content}</Form.FieldErrors>
-  </Form.Field>
+      <Form.Field {form} name="content">
+        <Form.Control let:attrs>
+          <Form.Label>Content</Form.Label>
+          <Textarea
+            {...attrs}
+            bind:value={$formData.content}
+            placeholder="Describe the ticket..."
+            rows={4}
+            class="bg-input"
+          />
+        </Form.Control>
+        <Form.Description>Provide a detailed description of the ticket</Form.Description>
+        <Form.FieldErrors>{$errors.content}</Form.FieldErrors>
+      </Form.Field>
 
-  <Form.Field {form} name="status">
-    <Form.Control let:attrs>
-      <Form.Label>Status</Form.Label>
-      <select
-        {...attrs}
-        bind:value={$formData.status}
-        class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        <option value="" disabled>Select a status</option>
-        {#each Object.values(TicketStatus) as status}
-          <option value={status}>{formatStatus(status)}</option>
-        {/each}
-      </select>
-    </Form.Control>
-    <Form.Description>Current status of the ticket</Form.Description>
-    <Form.FieldErrors>{$errors.status}</Form.FieldErrors>
-  </Form.Field>
+      <Form.Field {form} name="status">
+        <Form.Control let:attrs>
+          <Form.Label>Status</Form.Label>
+          <select
+            {...attrs}
+            bind:value={$formData.status}
+            class="w-full rounded-md border border-input bg-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="" disabled>Select a status</option>
+            {#each Object.values(TicketStatus) as status}
+              <option value={status}>{formatStatus(status)}</option>
+            {/each}
+          </select>
+        </Form.Control>
+        <Form.Description>Current status of the ticket</Form.Description>
+        <Form.FieldErrors>{$errors.status}</Form.FieldErrors>
+      </Form.Field>
 
-  <div class="flex gap-4">
-    <a href="/tickets/{ticketId}" class="flex-1">
-      <Button type="button" variant="outline" class="w-full">Cancel</Button>
-    </a>
-    <Button type="submit" disabled={$submitting} class="flex-1">
-      {$submitting ? 'Saving...' : 'Save Changes'}
-    </Button>
-  </div>
-</form>
+      <div class="flex gap-4">
+        <a href="/tickets/{ticketId}" class="flex-1">
+          <Button type="button" variant="outline" class="w-full">Cancel</Button>
+        </a>
+        <Button type="submit" disabled={$submitting} class="flex-1">
+          {$submitting ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </div>
+    </form>
+  </Card.Content>
+</Card.Root>
