@@ -83,7 +83,7 @@
 
       <div class="flex gap-4">
         <a href="/tickets" class="flex-1">
-          <Button type="button" variant="outline" class="w-full">Cancel</Button>
+          <Button type="button" variant="secondary" class="w-full">Cancel</Button>
         </a>
         <Button type="submit" disabled={$submitting} class="flex-1">
           {$submitting ? 'Creating...' : 'Create Ticket'}
