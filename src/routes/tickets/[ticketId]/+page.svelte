@@ -52,13 +52,14 @@
   {@const ticket = $queryData.data.data}
   {@const Icon = TICKET_ICONS[ticket.status]}
   <div class="mx-auto w-full min-w-fit max-w-xl">
-    <div class="mb-8 flex items-center justify-between">
+    <nav class="mb-8 flex items-center gap-4 border-b border-gray-200 pb-4 dark:border-gray-700/50">
       <Button
         href={paths.tickets.list()}
         variant="ghost"
-        class="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
+        size="sm"
+        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
       >
-        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -68,10 +69,10 @@
         </svg>
         Back to Tickets
       </Button>
-      <div class="flex gap-2">
-        <Button href="/tickets/{ticket.id}/edit" variant="outline">
+      <div class="ml-auto flex items-center gap-4">
+        <Button href="/tickets/{ticket.id}/edit" variant="ghost" size="sm">
           <svg
-            class="mr-2 h-4 w-4"
+            class="mr-1.5 h-3.5 w-3.5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -87,7 +88,8 @@
           Edit
         </Button>
         <Button
-          variant="outline"
+          variant="ghost"
+          size="sm"
           class="text-destructive hover:bg-destructive/10"
           onclick={() => {
             if (
@@ -99,10 +101,10 @@
           disabled={$mutation.isPending}
         >
           {#if $mutation.isPending}
-            <Spinner class="mr-2 h-4 w-4" />
+            <Spinner class="mr-1.5 h-3.5 w-3.5" />
           {:else}
             <svg
-              class="mr-2 h-4 w-4"
+              class="mr-1.5 h-3.5 w-3.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -119,18 +121,14 @@
           Delete Ticket
         </Button>
       </div>
-    </div>
-
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{ticket.title}</h1>
-    </div>
+    </nav>
 
     <Card.Root class="border border-gray-200 bg-white dark:border-gray-700/50 dark:bg-gray-800/50">
-      <Card.Header class="border-b border-gray-200 dark:border-gray-700/50">
-        <div class="flex items-center justify-between pb-4">
-          <TicketId id={ticket.id} />
+      <Card.Header class="space-y-6 border-b border-gray-200 pb-6 dark:border-gray-700/50">
+        <div class="flex items-start justify-between gap-4">
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{ticket.title}</h1>
           <span
-            class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium {getStatusColor(
+            class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium {getStatusColor(
               ticket.status
             )}"
           >
@@ -138,9 +136,24 @@
             {formatStatus(ticket.status)}
           </span>
         </div>
+        <div
+          class="flex items-center justify-between border-t border-gray-200 pt-6 dark:border-gray-700/50"
+        >
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Ticket ID</p>
+            <TicketId id={ticket.id} />
+          </div>
+          <div class="space-y-1 text-right">
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Created</p>
+            <p class="text-sm text-gray-900 dark:text-gray-100">March 15, 2024</p>
+          </div>
+        </div>
       </Card.Header>
-      <Card.Content>
-        <p class="text-pretty text-gray-700 dark:text-gray-300">{ticket.content}</p>
+      <Card.Content class="space-y-4">
+        <div>
+          <p class="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Description</p>
+          <p class="text-pretty text-gray-700 dark:text-gray-300">{ticket.content}</p>
+        </div>
       </Card.Content>
     </Card.Root>
   </div>
