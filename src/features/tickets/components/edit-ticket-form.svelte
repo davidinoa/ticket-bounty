@@ -10,6 +10,7 @@
   import { Textarea } from '$lib/components/ui/textarea';
   import * as Card from '$lib/components/ui/card';
   import { formatStatus } from '$lib/utils/ticketUtils';
+  import { toast } from 'svelte-sonner';
 
   let { data, ticketId }: { data: SuperValidated<TicketFormData>; ticketId: string } = $props();
 
@@ -17,6 +18,7 @@
     validators: zod(ticketFormSchema),
     onUpdate: ({ form }) => {
       if (form.valid) {
+        toast.success('Ticket updated successfully!');
         window.location.href = `/tickets/${ticketId}`;
       }
     }
