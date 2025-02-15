@@ -5,6 +5,7 @@
   import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
   import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
   import { setContext } from 'svelte';
+  import { Toaster } from 'svelte-sonner';
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -32,4 +33,5 @@
       <SvelteQueryDevtools />
     </QueryClientProvider>
   </main>
+  <Toaster richColors closeButton />
 </div>

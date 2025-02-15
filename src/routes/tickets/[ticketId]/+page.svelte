@@ -11,6 +11,7 @@
   import { ticketKeys } from '$features/tickets/query-keys';
   import { formatStatus } from '$lib/utils/ticketUtils';
   import ErrorBoundary from '$lib/components/error-boundary.svelte';
+  import TicketId from '$lib/components/ticket-id.svelte';
 
   const { data } = $props();
   const ticketId = data.ticketId;
@@ -120,29 +121,22 @@
       </div>
     </div>
 
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-6">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{ticket.title}</h1>
-      <span
-        class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium {getStatusColor(
-          ticket.status
-        )}"
-      >
-        <Icon class="size-4" />
-        {formatStatus(ticket.status)}
-      </span>
     </div>
 
     <Card.Root class="border border-gray-200 bg-white dark:border-gray-700/50 dark:bg-gray-800/50">
       <Card.Header class="border-b border-gray-200 dark:border-gray-700/50">
         <div class="flex items-center justify-between pb-4">
-          <div>
-            <Card.Description class="text-sm text-gray-600 dark:text-gray-400"
-              >Ticket ID</Card.Description
-            >
-            <Card.Title class="text-lg font-normal text-gray-900 dark:text-white"
-              >{ticket.id}</Card.Title
-            >
-          </div>
+          <TicketId id={ticket.id} />
+          <span
+            class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium {getStatusColor(
+              ticket.status
+            )}"
+          >
+            <Icon class="size-3.5" />
+            {formatStatus(ticket.status)}
+          </span>
         </div>
       </Card.Header>
       <Card.Content>
